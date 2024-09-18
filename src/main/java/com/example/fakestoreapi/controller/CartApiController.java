@@ -19,11 +19,12 @@ public class CartApiController {
     private final CartService cartService;
 
     @PostMapping
-//    public Cart addCart(@IfLogin LoginUserDto loginUserDto) { // TODO : security - @IfLogin 처리
-    public Cart addCart(@RequestBody LoginUserDto loginUserDto) {
+    public Cart addCart(@IfLogin LoginUserDto loginUserDto) {
+//    public Cart addCart(@RequestBody LoginUserDto loginUserDto) {
         LocalDate localDate = LocalDate.now();
         String date = String.valueOf(localDate.getYear()) + (localDate.getMonthValue() < 10 ? "0" :"") + String.valueOf(localDate.getMonthValue()) + (localDate.getDayOfMonth() < 10 ? "0" :"") +String.valueOf(localDate.getDayOfMonth());
         Cart cart = cartService.addCart(loginUserDto.getMemberId(), date);
         return cart;
     }
+
 }
