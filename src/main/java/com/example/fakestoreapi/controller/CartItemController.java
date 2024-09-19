@@ -6,10 +6,9 @@ import com.example.fakestoreapi.security.jwt.util.IfLogin;
 import com.example.fakestoreapi.security.jwt.util.LoginUserDto;
 import com.example.fakestoreapi.service.CartItemService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/cartItems")
 @RestController
@@ -30,5 +29,12 @@ public class CartItemController {
             return cartItemService.updateCartItem(cartItem);
         }
         return cartItemService.addCartItem(addCartItemDto);
+    }
+
+    @GetMapping
+    public List<CartItem> getCartItems(@IfLogin LoginUserDto loginUserDto, @RequestParam(required = false) Long cartId) {
+        if(cartId == null)
+            return cartItemService.getCartItems(loginUserDto.getMemberId());
+        return cartItemService.getCartItems(loginUserDto.getMemberId(), cartId);
     }
 }

@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CartItemService {
@@ -48,5 +50,26 @@ public class CartItemService {
         CartItem findCartItem = cartItemRepository.findById(cartItem.getId()).orElseThrow();
         findCartItem.setQuantity(cartItem.getQuantity());
         return findCartItem;
+    }
+
+    /* ?? 왜 아래와 달리 똑같은 select from cart 가 두번 실행되지?
+        - findByCart_memberId(memberId)는 cart가 두 번 조회하는 이유
+            1. 먼저 Cart 엔티티를 로드
+                CartItem에는 Cart의 외래 키만 저장되어 있으므로,
+                이 외래 키를 사용해 Cart 테이블에서
+                memberId에 맞는 해당 Cart 객체를 가져옴
+            2. CartItem과 연결된 Cart 조회
+                Cart와 연결된 CartItem들을 조회
+        - findByCart_memberIdAndCart_id(memberId, cartId)는 한 번만 조회
+            cartId를 사용하여 한 번의 조인만으로 Cart와 CartItem을 모두 가져올 수 있습니다.
+     */
+    @Transactional(readOnly = true)
+    public List<CartItem> getCartItems(Long memberId) {
+        return cartItemRepository.findByCart_memberId(memberId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CartItem> getCartItems(Long memberId, Long cartId) {
+        return cartItemRepository.findByCart_memberIdAndCart_id(memberId, cartId);
     }
 }

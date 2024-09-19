@@ -3,6 +3,7 @@ package com.example.fakestoreapi.repository;
 import com.example.fakestoreapi.domain.CartItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
@@ -13,5 +14,7 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     boolean existsByCart_memberIdAndCart_idAndProductId(Long memberId, Long cartId, Long productId);
 
     Optional<CartItem> findByCart_memberIdAndCart_idAndProductId(Long memberId, Long cartId, Long productId);
+    List<CartItem> findByCart_memberId(Long memberId);
+    List<CartItem> findByCart_memberIdAndCart_id(Long memberId, Long cartId);
 
 }
