@@ -12,9 +12,12 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     //   주어진 cartId와 일치하는 Cart.
     //   주어진 productId와 일치하는 Product.
     boolean existsByCart_memberIdAndCart_idAndProductId(Long memberId, Long cartId, Long productId);
+    boolean existsByCart_memberIdAndId(Long memberId, Long cartItemId);
 
     Optional<CartItem> findByCart_memberIdAndCart_idAndProductId(Long memberId, Long cartId, Long productId);
     List<CartItem> findByCart_memberId(Long memberId);
     List<CartItem> findByCart_memberIdAndCart_id(Long memberId, Long cartId);
+
+    void deleteByCart_memberIdAndId(Long memberId, Long cartItemId);
 
 }

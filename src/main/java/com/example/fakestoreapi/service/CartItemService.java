@@ -39,6 +39,11 @@ public class CartItemService {
     }
 
     @Transactional(readOnly = true)
+    public boolean isCartItemExist(Long memberId, Long cartItemId) {
+        return cartItemRepository.existsByCart_memberIdAndId(memberId, cartItemId);
+    }
+
+    @Transactional(readOnly = true)
     public CartItem getCartItem(Long memberId, Long cartId, Long productId) {
         // 쿼리 두 개 실행됨
         return cartItemRepository.findByCart_memberIdAndCart_idAndProductId(memberId, cartId, productId).orElseThrow();
@@ -71,5 +76,14 @@ public class CartItemService {
     @Transactional(readOnly = true)
     public List<CartItem> getCartItems(Long memberId, Long cartId) {
         return cartItemRepository.findByCart_memberIdAndCart_id(memberId, cartId);
+    }
+
+    @Transactional
+    public void deleteCartItem(Long memberId, Long cartItemId) {
+        /* (existsByCart_memberIdAndId 와 달리) cart 테이블을 조회하는 이유
+         - deleteBy는 데이터 삭제 시 연관된 엔티티의 상태나 무결성을 확인하기 위해 Cart 조회
+         - JPA는 삭제할 때 관련된 부모 엔티티 상태 확인
+         */
+        cartItemRepository.deleteByCart_memberIdAndId(memberId, cartItemId);
     }
 }
